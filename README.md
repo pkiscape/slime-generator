@@ -1,4 +1,4 @@
-# Slime	
+# Slime	Generator
 
 A CLI tool that allows you to create slime with fun attributes! It supports a local SQLite database which stores information about each slime. 
 
@@ -34,7 +34,7 @@ According to the RNG, accessories will be chosen for the slime (up to two). Ther
 
 ## Usage
 ```
-usage: generateslimes.py [-h] -n NUMBER [-g] [-v] [-r] [-i]
+usage: slimegenerator.py [-h] -n NUMBER [-g] [-v] [-r] [-i]
 
 Slime CLI tool
 
@@ -52,19 +52,19 @@ optional arguments:
 
 1) Create 10 slime, displaying a graph to show their creation times.
 
-    `python3 generateslimes.py -n 10 -g`
+    `python3 slimegenerator.py -n 10 -g`
 
 2) Create 15 slime, being verbose to see them get created
 
-    `python3 generateslimes.py -n 15 -v`
+    `python3 slimegenerator.py -n 15 -v`
 
 3) Create 20 slime, printing when there's a rare item,  while showing a graph
 
-    `python3 generateslimes.py -n 20 -r -g`
+    `python3 slimegenerator.py -n 20 -r -g`
 
 4) Create 100 slimes and Enable all!
 
-    `python3 generateslimes.py -n 100 -g -v -r -i`
+    `python3 slimegenerator.py -n 100 -g -v -r -i`
 
 ## Design
 
