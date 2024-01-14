@@ -47,9 +47,10 @@ def main():
 	#Start total timer
 	slime_time_list = []
 	total_rt = timeit.default_timer()
-	
-	for slime in loop_number:
-		slime_time = create_slime(graph=graph, verbose=verbose, rare=rare, images=images, no_db_images=no_db_images)
+
+	for index, slime in enumerate(loop_number, start=1):
+	#for slime in loop_number:
+		slime_time = create_slime(graph=graph, verbose=verbose, rare=rare, images=images, no_db_images=no_db_images,index=index,loop_number=loop_number)
 
 		#End timer for total create time
 		slime_time_list.append(slime_time)
@@ -67,7 +68,7 @@ def main():
 	if verbose:
 		print("All Slime Creation Time: ", create_time)
 	
-	
+
 class Slime():
 	"""Slime Object - Creates Attributes of the Slime (ID, KeyID, Version, Name, Color, Template, and Accessories)"""
 	def __init__(self):
@@ -170,7 +171,7 @@ class Slime():
 		return chosen
 
 
-def create_slime(graph,verbose,rare,images,no_db_images):
+def create_slime(graph,verbose,rare,images,no_db_images,index,loop_number):
 	'''
 	Creates a Slime:
 	1) Creates Attributes of the Slime (UID, Version, Name, Color, Template, and Accessories)
@@ -213,7 +214,7 @@ def create_slime(graph,verbose,rare,images,no_db_images):
 	slime_time = timeit.default_timer() - slime_start
 
 	if verbose:
-			print(f"Slime Created: ID:{slime_list[0]}, Name: {slime_list[2]} in {slime_time} seconds")
+			print(f"{index}/{loop_number.stop} Slime Created. ID:{slime_list[0]}, Name: {slime_list[2]} in {slime_time} seconds")
 	
 	return slime_time
 
