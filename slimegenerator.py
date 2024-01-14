@@ -18,6 +18,7 @@ import string
 import uuid
 import slimedb, slimeimgcreator, slimestats
 import timeit
+import time
 
 def main():
 
@@ -31,6 +32,7 @@ def main():
 	argparse_main.add_argument("-r","--rare", action="store_true", help="Rare Detector: prints information when a rare occurance happens",required=False)
 	argparse_main.add_argument("-i","--images", action="store_true", help="Prints the slime image in the img/ directory",required=False)
 	argparse_main.add_argument("-ndi","--no-db-images", action="store_true", help="Omits the slime image in the sqlite database",required=False)
+	argparse_main.add_argument("-s","--sleep", type=float, help="Add static backoff (sleep timer) in seconds to wait after creation of each slime",required=False)
 	args = argparse_main.parse_args()
 
 	graph = args.graph if args.graph is not None else False
@@ -38,7 +40,8 @@ def main():
 	rare = args.rare if args.rare is not None else False
 	images = args.images if args.images is not None else False
 	no_db_images = args.no_db_images if args.no_db_images is not None else False
-
+	sleep = args.sleep if args.sleep is not None else False
+	
 	loop_number=range(args.number)
 
 	#Start total timer
@@ -50,6 +53,10 @@ def main():
 
 		#End timer for total create time
 		slime_time_list.append(slime_time)
+
+		#Add backoff if arguement was passed
+		if sleep:
+			time.sleep(sleep)
 		
 	#End timer for total
 	create_time = timeit.default_timer() - total_rt
@@ -59,8 +66,8 @@ def main():
 		slimestats.slime_creation_graph(create_time, args.number, slime_time_list)
 	if verbose:
 		print("All Slime Creation Time: ", create_time)
-
-
+	
+	
 class Slime():
 	"""Slime Object - Creates Attributes of the Slime (ID, KeyID, Version, Name, Color, Template, and Accessories)"""
 	def __init__(self):
