@@ -49,13 +49,13 @@ def main():
 	total_rt = timeit.default_timer()
 
 	for index, slime in enumerate(loop_number, start=1):
-	#for slime in loop_number:
+	
 		slime_time = create_slime(graph=graph, verbose=verbose, rare=rare, images=images, no_db_images=no_db_images,index=index,loop_number=loop_number)
 
 		#End timer for total create time
 		slime_time_list.append(slime_time)
 
-		#Add backoff if arguement was passed
+		#Add backoff if argument was passed
 		if sleep:
 			time.sleep(sleep)
 		
