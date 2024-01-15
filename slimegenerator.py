@@ -8,7 +8,7 @@
 #=====================================================
 #
 #
-#@version	1
+#@version	2
 #@link		https://github.com/pkiscape
 #@authors	pkiscape.com
 
@@ -16,9 +16,9 @@ import argparse
 import random
 import string
 import uuid
-import slimedb, slimeimgcreator, slimestats
 import timeit
 import time
+from src import slimedb, slimeimgcreator, slimestats
 
 def main():
 
@@ -81,16 +81,17 @@ class Slime():
 		self.accessories = self.slimeaccessories()
 
 	def getuid(self):
+		#Unique ID for each slime!
 		uid = uuid.uuid4()
 		return uid
 
 	def slimeversion(self):
-		#Static for each version
+		#Static for each version. Can be used to version your slimes!
 		version = 1
 		return version
 
 	def slimename(self):
-
+		#Randomly generated name. I try to make it "name like" by making the 2nd letter in the first and last name a vowel.
 		vowels = "a","e","i","o","u"
 		
 		#firstname
@@ -110,7 +111,7 @@ class Slime():
 		return fullname
 
 	def slimecolor(self):
-		#Chooses a color code
+		#Chooses a color code from random
 		r = lambda: random.randint(0,255)
 		hexadecimal = '#%02X%02X%02X' % (r(),r(),r())
 		return(hexadecimal)
@@ -214,7 +215,7 @@ def create_slime(graph,verbose,rare,images,no_db_images,index,loop_number):
 	slime_time = timeit.default_timer() - slime_start
 
 	if verbose:
-			print(f"{index}/{loop_number.stop} Slime Created. ID:{slime_list[0]}, Name: {slime_list[2]} in {slime_time} seconds")
+		print(f"{index}/{loop_number.stop} Slime Created. ID:{slime_list[0]}, Name: {slime_list[2]} in {slime_time} seconds")
 	
 	return slime_time
 
