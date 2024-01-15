@@ -103,28 +103,36 @@ def create_tables():
 	slimedb_connection.close()
 
 
-def insert_into_slime_table(slime_dict):
+def insert_into_slime_table(slime_list,no_db_images):
 	slimedb_connection = sqlite3.connect("slime.db")
 	cursor = slimedb_connection.cursor()
 
-	cursor.execute('''
-    INSERT INTO Slime (SlimeID, Version, Name, Color, Template, SlimeImage)
-    VALUES (?, ?, ?, ?, ?, ?)
-	''', slime_dict)
-
-
+	#Remove the image from the database if no_db_images is passed
+	if no_db_images == True:
+		del slime_list[5]
+		cursor.execute('''
+	    INSERT INTO Slime (SlimeID, Version, Name, Color, Template)
+	    VALUES (?, ?, ?, ?, ?)
+		''', slime_list)
+	
+	else:
+		cursor.execute('''
+	    INSERT INTO Slime (SlimeID, Version, Name, Color, Template, SlimeImage)
+	    VALUES (?, ?, ?, ?, ?, ?)
+		''', slime_list)
+		
 	slimedb_connection.commit()
 	slimedb_connection.close()
 
 
-def insert_into_accessories_table(accessory_dict):
+def insert_into_accessories_table(accessory_list):
 	slimedb_connection = sqlite3.connect("slime.db")
 	cursor = slimedb_connection.cursor()
 
 	cursor.execute('''
 	INSERT INTO Accessories (SlimeID, AccessoryName)
 	VALUES (?, ?)
-		''',accessory_dict)
+		''',accessory_list)
 
 	slimedb_connection.commit()
 	slimedb_connection.close()

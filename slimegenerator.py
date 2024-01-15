@@ -8,7 +8,7 @@
 #=====================================================
 #
 #
-#@version	1
+#@version	2
 #@link		https://github.com/pkiscape
 #@authors	pkiscape.com
 
@@ -16,8 +16,9 @@ import argparse
 import random
 import string
 import uuid
-import slimedb, slimeimgcreator, slimestats
 import timeit
+import time
+from src import slimedb, slimeimgcreator, slimestats
 
 def main():
 
@@ -30,25 +31,33 @@ def main():
 	argparse_main.add_argument("-v","--verbose", action="store_true", help="Print slime information and creation times",required=False)
 	argparse_main.add_argument("-r","--rare", action="store_true", help="Rare Detector: prints information when a rare occurance happens",required=False)
 	argparse_main.add_argument("-i","--images", action="store_true", help="Prints the slime image in the img/ directory",required=False)
+	argparse_main.add_argument("-ndi","--no-db-images", action="store_true", help="Omits the slime image in the sqlite database",required=False)
+	argparse_main.add_argument("-s","--sleep", type=float, help="Add static backoff (sleep timer) in seconds to wait after creation of each slime",required=False)
 	args = argparse_main.parse_args()
 
 	graph = args.graph if args.graph is not None else False
 	verbose = args.verbose if args.verbose is not None else False
 	rare = args.rare if args.rare is not None else False
 	images = args.images if args.images is not None else False
-
+	no_db_images = args.no_db_images if args.no_db_images is not None else False
+	sleep = args.sleep if args.sleep is not None else False
+	
 	loop_number=range(args.number)
 
 	#Start total timer
 	slime_time_list = []
 	total_rt = timeit.default_timer()
+
+	for index, slime in enumerate(loop_number, start=1):
 	
-	for slime in loop_number:
-		slime_time = create_slime(graph=graph, verbose=verbose, rare=rare, images=images)
+		slime_time = create_slime(graph=graph, verbose=verbose, rare=rare, images=images, no_db_images=no_db_images,index=index,loop_number=loop_number)
 
 		#End timer for total create time
 		slime_time_list.append(slime_time)
-		
+
+		#Add backoff if argument was passed
+		if sleep:
+			time.sleep(sleep)
 		
 	#End timer for total
 	create_time = timeit.default_timer() - total_rt
@@ -58,7 +67,7 @@ def main():
 		slimestats.slime_creation_graph(create_time, args.number, slime_time_list)
 	if verbose:
 		print("All Slime Creation Time: ", create_time)
-
+	
 
 class Slime():
 	"""Slime Object - Creates Attributes of the Slime (ID, KeyID, Version, Name, Color, Template, and Accessories)"""
@@ -72,16 +81,17 @@ class Slime():
 		self.accessories = self.slimeaccessories()
 
 	def getuid(self):
+		#Unique ID for each slime!
 		uid = uuid.uuid4()
 		return uid
 
 	def slimeversion(self):
-		#Static for each version
+		#Static for each version. Can be used to version your slimes!
 		version = 1
 		return version
 
 	def slimename(self):
-
+		#Randomly generated name. I try to make it "name like" by making the 2nd letter in the first and last name a vowel.
 		vowels = "a","e","i","o","u"
 		
 		#firstname
@@ -101,7 +111,7 @@ class Slime():
 		return fullname
 
 	def slimecolor(self):
-		#Chooses a color code
+		#Chooses a color code from random
 		r = lambda: random.randint(0,255)
 		hexadecimal = '#%02X%02X%02X' % (r(),r(),r())
 		return(hexadecimal)
@@ -162,13 +172,13 @@ class Slime():
 		return chosen
 
 
-def create_slime(graph,verbose,rare,images):
+def create_slime(graph,verbose,rare,images,no_db_images,index,loop_number):
 	'''
 	Creates a Slime:
 	1) Creates Attributes of the Slime (UID, Version, Name, Color, Template, and Accessories)
 	2) Creates Slime Picture, containing Attributes
 	3) Inserts data(Slime attributes/picture) into Database
-	4) Optional actions such as read actions / stats and graphs
+	4) Optional actions such as read actions / stats and graphs / rare detector
 	'''
 	#Start timer
 	slime_start = timeit.default_timer()
@@ -187,28 +197,27 @@ def create_slime(graph,verbose,rare,images):
 	#-----------Insert data into Database-----------#
 	# Store Slime and Accessories in DB
 
-	slime_dict = (str(slime.uid),slime.version,slime.name,slime.color,slime.template,in_memory_slime_image)
-	slimedb.insert_into_slime_table(slime_dict)
+	slime_list = [str(slime.uid),slime.version,slime.name,slime.color,slime.template,in_memory_slime_image]
+	slimedb.insert_into_slime_table(slime_list,no_db_images)
 		
-	accessory_dict = {}
+	accessory_list = []
 
 	for accessory in slime.accessories:
-		accessory_dict = (str(slime.uid),accessory)
-		slimedb.insert_into_accessories_table(accessory_dict)
+		accessory_list = [str(slime.uid),accessory]
+		slimedb.insert_into_accessories_table(accessory_list)
 
 	if rare:
-		slime_list = slime_dict[0:6]
-		rare_list = slimestats.slime_rare_detector(slime_list, slime.accessories)
+		slime_rare_list = slime_list[0:4]
+		rare_list = slimestats.slime_rare_detector(slime_rare_list, slime.accessories)
 
 	#DB Read Actions
 	#slimedb.read_all_slime()
 	slime_time = timeit.default_timer() - slime_start
 
 	if verbose:
-			print(f"Slime Created: ID:{slime_dict[0]}, Name: {slime_dict[2]} in {slime_time} seconds")
+		print(f"{index}/{loop_number.stop} Slime Created. ID:{slime_list[0]}, Name: {slime_list[2]} in {slime_time} seconds")
 	
 	return slime_time
-
 
 if __name__ == '__main__':
 	main()

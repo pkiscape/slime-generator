@@ -34,11 +34,11 @@ According to the RNG, accessories will be chosen for the slime (up to two). Ther
 
 ## Usage
 ```
-usage: slimegenerator.py [-h] -n NUMBER [-g] [-v] [-r] [-i]
+usage: slimegenerator.py [-h] -n NUMBER [-g] [-v] [-r] [-i] [-ndi] [-s SLEEP]
 
 Slime CLI tool
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -n NUMBER, --number NUMBER
                         Define how many slime you would like to create
@@ -46,13 +46,16 @@ optional arguments:
   -v, --verbose         Print slime information and creation times
   -r, --rare            Rare Detector: prints information when a rare occurance happens
   -i, --images          Prints the slime image in the img/ directory
+  -ndi, --no-db-images  Omits the slime image in the sqlite database
+  -s SLEEP, --sleep SLEEP
+                        Add static backoff (sleep timer) in seconds to wait after creation of each slime
   ```
 
 ## Examples
 
-1) Create 10 slime, displaying a graph to show their creation times.
+1) Create 10 slime, displaying a graph to show their creation times. Slimes get saved to img/ directory
 
-    `python3 slimegenerator.py -n 10 -g`
+    `python3 slimegenerator.py -n 10 -g -i`
 
 2) Create 15 slime, being verbose to see them get created
 
@@ -62,9 +65,9 @@ optional arguments:
 
     `python3 slimegenerator.py -n 20 -r -g`
 
-4) Create 100 slimes and Enable all!
+4) Create 100 slimes with graphs, verbosity, rare detector, images in img/ folder, while omitting slime image in DB
 
-    `python3 slimegenerator.py -n 100 -g -v -r -i`
+    `python3 slimegenerator.py -n 100 -g -v -r -i -ndi`
 
 ## Design
 

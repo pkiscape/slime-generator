@@ -25,14 +25,14 @@ def slime_creation_graph(create_time, loop_number, slime_time_list):
 	plt.show()	
 
 
-def slime_rare_detector(slime_list, accessories):
+def slime_rare_detector(slime_rare_list, accessories):
 
 	rare_list = []
-	name = slime_list[2]
-	color = slime_list[3]
+	name = slime_rare_list[2]
+	color = slime_rare_list[3]
 	
 	#Rare Color
-	rare_color_list = [" #000000","#FFFFFF"]
+	rare_color_list = ["#000000","#FFFFFF"]
 
 	if color in rare_color_list:
 		rare_list.append(color)
