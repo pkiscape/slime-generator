@@ -40,14 +40,14 @@ Slime CLI tool
 
 options:
   -h, --help            show this help message and exit
-  -n NUMBER, --number NUMBER
+  -n [NUMBER], --number NUMBER
                         Define how many slime you would like to create
   -g, --graph           Pass this if you would like to view a graph
   -v, --verbose         Print slime information and creation times
   -r, --rare            Rare Detector: prints information when a rare occurance happens
   -i, --images          Prints the slime image in the img/ directory
   -ndi, --no-db-images  Omits the slime image in the sqlite database
-  -s SLEEP, --sleep SLEEP
+  -s [SECONDS], --sleep SECONDS
                         Add static backoff (sleep timer) in seconds to wait after creation of each slime
   ```
 
@@ -68,6 +68,10 @@ options:
 4) Create 100 slimes with graphs, verbosity, rare detector, images in img/ folder, while omitting slime image in DB
 
     `python3 slimegenerator.py -n 100 -g -v -r -i -ndi`
+
+5) Create 200 slimes with verbosity, putting images in the img/ folder, with a 1 second wait time
+
+    `python3 slimegenerator.py -n 200 -v -i -s 1`
 
 ## Design
 
