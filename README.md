@@ -1,4 +1,4 @@
-# Slime	Generator
+# Slime Generator
 
 A CLI tool that allows you to create slime with fun attributes! It supports a local SQLite database which stores information about each slime. 
 
@@ -55,23 +55,23 @@ options:
 
 1) Create 10 slime, displaying a graph to show their creation times. Slimes get saved to img/ directory by default.
 
-    `python3 slimegenerator.py -n 10 -g`
+    `python3 slime_generator.py -n 10 -g`
 
 2) Create 15 slime, being verbose to see them get created.
 
-    `python3 slimegenerator.py -n 15 -v`
+    `python3 slime_generator.py -n 15 -v`
 
 3) Create 20 slime, printing when there's a rare item,  while showing a graph.
 
-    `python3 slimegenerator.py -n 20 -r -g`
+    `python3 slime_generator.py -n 20 -r -g`
 
 4) Create 100 slimes with graphs, verbosity, rare detector, adding the slime image in DB.
 
-    `python3 slimegenerator.py -n 100 -g -v -r -d`
+    `python3 slime_generator.py -n 100 -g -v -r -d`
 
 5) Create 200 slimes with verbosity, omitting images in the img/ folder, with a 1 second wait time.
 
-    `python3 slimegenerator.py -n 200 -v -ni -s 1`
+    `python3 slime_generator.py -n 200 -v -ni -s 1`
 
 ## Design
 
