@@ -46,6 +46,8 @@ def slime_rare_detector(slime_rare_list, accessories):
         "santa hat",
         "crown",
         "golden top hat",
+        "helmet",
+        "mustache+"
     ]
 
     for accessory in accessories:
