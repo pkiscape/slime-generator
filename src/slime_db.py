@@ -109,14 +109,14 @@ def create_tables():
     slimedb_connection.close()
 
 
-def insert_into_slime_table(slime_list, no_db_images):
+def insert_into_slime_table(slime_list, db_images):
     """Inserts data into main Slime table"""
 
     slimedb_connection = sqlite3.connect("slime.db")
     cursor = slimedb_connection.cursor()
 
     # Remove the image from the database if no_db_images is passed
-    if no_db_images is True:
+    if db_images is False:
         del slime_list[5]
         cursor.execute(
             """
