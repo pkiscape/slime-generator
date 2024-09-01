@@ -1,0 +1,64 @@
+{
+    "Accessories": {
+            "Sunhat":{
+                "Rarity":"Common",
+                "Location":"etc/accessories/sunhat.png",
+                "Type":"Hat"
+            },
+            "Top Hat":{
+                "Rarity":"Uncommon",
+                "Location":"etc/accessories/tophat.png",
+                "Type":"Hat"
+            },
+            "Wizard Hat":{
+                "Rarity":"Uncommon",
+                "Location":"etc/accessories/wizardhat.png",
+                "Type":"Hat"
+            },
+            "Robin Hood Hat":{
+                "Rarity":"Rare",
+                "Location":"etc/accessories/robinhoodhat.png",
+                "Type":"Hat"
+            },
+            "Santa Hat":{
+                "Rarity":"Rare",
+                "Location":"etc/accessories/santahat.png",
+                "Type":"Hat"
+            },
+            "Crown":{
+                "Rarity":"Rare",
+                "Location":"etc/accessories/crown.png",
+                "Type":"Hat"
+            },
+            "Golden Top Hat":{
+                "Rarity":"Rare",
+                "Location":"etc/accessories/goldentophat.png",
+                "Type":"Hat"
+            },
+            "Helmet":{
+                "Rarity":"Rare",
+                "Location":"etc/accessories/helmet.png",
+                "Type":"Hat"
+            },
+            "Sunglasses":{
+                "Rarity":"Common",
+                "Location":"etc/accessories/sunglasses.png",
+                "Type":"Other"
+            },
+            "Mustache":{
+                "Rarity":"Uncommon",
+                "Location":"etc/accessories/mustache.png",
+                "Type":"Other"
+            },
+            "Mustache+":{
+                "Rarity":"Rare",
+                "Location":"etc/accessories/mustache+.png",
+                "Type":"Other"
+            },
+            "Golden Sunglasses":{
+                "Rarity":"Rare",
+                "Location":"etc/accessories/goldensunglasses.png",
+                "Type":"Other"
+
+        }
+    }}
