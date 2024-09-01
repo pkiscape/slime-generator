@@ -2,12 +2,11 @@
 
 """
 =====================================================
-
 Slime
 Create Slime with fun attributes
 =====================================================
 
-@version	3
+@version	4
 @link		https://github.com/pkiscape
 @authors	pkiscape.com
 """
@@ -18,7 +17,7 @@ import string
 import uuid
 import timeit
 import time
-from src import slimedb, slimeimgcreator, slimestats
+from src import slime_db, slime_image_creator, slime_stats
 
 
 def main():
@@ -27,17 +26,17 @@ def main():
     """
     argparse_main = argparse.ArgumentParser(description="Slime CLI tool")
     argparse_main.add_argument(
-    	"-n", "--number", type=int, help="Define how many slime you would like to create", required=True)
+    	"-n", "--number", type=int, help="Specify the number of slimes you want to create", required=True)
     argparse_main.add_argument(
-    	"-g", "--graph", action="store_true", help="Pass this if you would like to view a graph", required=False)
+    	"-g", "--graph", action="store_true", help="Create graph of slime creation times", required=False)
     argparse_main.add_argument(
     	"-v", "--verbose", action="store_true", help="Print slime information and creation times", required=False)
     argparse_main.add_argument(
         "-r", "--rare", action="store_true", help="Rare Detector: prints information when a rare occurance happens", required=False)
     argparse_main.add_argument(
-    	"-i", "--images", action="store_true", help="Prints the slime image in the img/ directory", required=False)
+    	"-ni", "--no-images", action="store_true", help="Do not save slime images to the img/ directory", required=False)
     argparse_main.add_argument(
-    	"-ndi", "--no-db-images", action="store_true", help="Omits the slime image in the sqlite database", required=False)
+    	"-d", "--db-images", action="store_true", help="Adds the slime image to the sqlite database", required=False)
     argparse_main.add_argument(
         "-s", "--sleep", type=float, help="Add static backoff (sleep timer) in seconds to wait after creation of each slime", required=False)
     args = argparse_main.parse_args()
@@ -45,8 +44,8 @@ def main():
     graph = args.graph if args.graph is not None else False
     verbose = args.verbose if args.verbose is not None else False
     rare = args.rare if args.rare is not None else False
-    images = args.images if args.images is not None else False
-    no_db_images = args.no_db_images if args.no_db_images is not None else False
+    no_images = args.no_images if args.no_images is not None else False
+    db_images = args.db_images if args.db_images is not None else False
     sleep = args.sleep if args.sleep is not None else False
 
     loop_number = range(args.number)
@@ -60,8 +59,8 @@ def main():
             graph=graph,
             verbose=verbose,
             rare=rare,
-            images=images,
-            no_db_images=no_db_images,
+            no_images=no_images,
+            db_images=db_images,
             index=index,
             loop_number=loop_number
         )
@@ -78,7 +77,7 @@ def main():
 
     if graph:
         # -----------Graphs/Stats-----------#
-        slimestats.slime_creation_graph(
+        slime_stats.slime_creation_graph(
         	create_time,
         	args.number,
         	slime_time_list)
@@ -90,55 +89,53 @@ class Slime:
     """Slime Object - Creates Attributes of the Slime (ID, KeyID, Version, Name, Color, Template, and Accessories)"""
 
     def __init__(self):
-        self.uid = self.getuid()
-        self.version = self.slimeversion()
-        self.name = self.slimename()
-        self.color = self.slimecolor()
-        self.template = self.slimetemplate()
-        self.accessories = self.slimeaccessories()
+        self.uid = self.get_uid()
+        self.version = self.get_slime_version()
+        self.name = self.get_slime_name()
+        self.color = self.get_slime_color()
+        self.template = self.get_slime_template()
+        self.accessories = self.get_slime_accessories()
 
-    def getuid(self):
+    def get_uid(self):
         """Unique ID for each slime!"""
-        uid = uuid.uuid4()
-        return uid
+        return uuid.uuid4()
 
-    def slimeversion(self):
+    def get_slime_version(self):
         """Static for each version. Can be used to version your slimes!"""
-        version = 1
+        version = 2
         return version
 
-    def slimename(self):
-        """Randomly generated name. I try to make it "name like" by making the 2nd letter in the first and last name a vowel."""
+    def get_slime_name(self):
+        """Randomly generated name. I try to make it "namelike" by making the 2nd letter in the first and last name a vowel."""
         vowels = "a", "e", "i", "o", "u"
 
-        # firstname
+        # First Name
         fn_rand_num = random.randint(0, 9)
         fn_firstletter = random.choice(string.ascii_uppercase)
         fn_secondletter = random.choice(vowels)
         fn_rest = "".join(random.choices(string.ascii_lowercase, k=fn_rand_num))
         fn = fn_firstletter + fn_secondletter + fn_rest
 
-        # lastname
+        # Last Name
         ln_rand_num = random.randint(0, 10)
         ln_firstletter = random.choice(string.ascii_uppercase)
         ln_secondletter = random.choice(vowels)
         ln_rest = "".join(random.choices(string.ascii_lowercase, k=ln_rand_num))
         ln = ln_firstletter + ln_secondletter + ln_rest
-        fullname = fn + " " + ln
-        return fullname
 
-    def slimecolor(self):
+        return fn + " " + ln
+
+    def get_slime_color(self):
         """Chooses a color code from random"""
         r, g, b = random.choices(range(256), k=3)
-        hexadecimal = f"#{r:02X}{g:02X}{b:02X}"
-        return hexadecimal
 
-    def slimetemplate(self):
+        return f"#{r:02X}{g:02X}{b:02X}"
+
+    def get_slime_template(self) -> int:
         """Chooses a template which will point to a png file"""
-        template = random.randint(1, 3)
-        return template
+        return random.randint(1, 4)
 
-    def slimeaccessories(self):
+    def get_slime_accessories(self) -> list:
         """
         Slime will have two slots for accessories:
 
@@ -149,47 +146,47 @@ class Slime:
         Ex. If common is chosen, it chooses a random common.
         """
         # Common
-        common_other = ["sunglasses"]
-        common_hat = ["sunhat"]
+        common_other = ["Sunglasses"]
+        common_hat = ["Sunhat"]
 
         # Uncommon
-        uncommon_other = ["mustache"]
-        uncommon_hat = ["top hat", "wizard hat"]
+        uncommon_other = ["Mustache"]
+        uncommon_hat = ["Top Hat", "Wizard Hat"]
 
         # Rare
-        rare_other = ["golden sunglasses"]
-        rare_hat = ["robin hood hat", "santa hat", "crown", "golden top hat"]
+        rare_other = ["Golden Sunglasses", "Mustache+"]
+        rare_hat = ["Robin Hood Hat", "Santa Hat", "Crown", "Golden Top Hat", "Helmet"]
 
-        chosen = []
+        slime_accessories = []
 
         # Other slot roll
         roll_other = random.randint(1, 26)
 
         if roll_other in (1, 2, 3, 4, 5):
-            chosen.append(random.choice(common_other))
+            slime_accessories.append(random.choice(common_other))
 
         if roll_other in (9, 10, 11):
-            chosen.append(random.choice(uncommon_other))
+            slime_accessories.append(random.choice(uncommon_other))
 
         if roll_other == 25:
-            chosen.append(random.choice(rare_other))
+            slime_accessories.append(random.choice(rare_other))
 
         # Hat slot roll
         roll_hat = random.randint(1, 26)
 
         if roll_hat in (1, 2, 3, 4, 5):
-            chosen.append(random.choice(common_hat))
+            slime_accessories.append(random.choice(common_hat))
 
         if roll_hat in (9, 10, 11):
-            chosen.append(random.choice(uncommon_hat))
+            slime_accessories.append(random.choice(uncommon_hat))
 
         if roll_hat == 25:
-            chosen.append(random.choice(rare_hat))
+            slime_accessories.append(random.choice(rare_hat))
 
-        return chosen
+        return slime_accessories
 
 
-def create_slime(graph, verbose, rare, images, no_db_images, index, loop_number):
+def create_slime(graph, verbose, rare, no_images,  db_images, index, loop_number):
     """
     Creates a Slime:
     1) Creates Attributes of the Slime (UID, Version, Name, Color, Template, and Accessories)
@@ -201,45 +198,50 @@ def create_slime(graph, verbose, rare, images, no_db_images, index, loop_number)
     slime_start = timeit.default_timer()
 
     # Create DB and Tables if not already created
-    found = slimedb.check_tables()
+    found = slime_db.check_tables()
 
     if found is False:
-        slimedb.create_tables()
+        slime_db.create_tables()
 
     # -----------Create Slime Object-----------#
     slime = Slime()
     # -----------Create Slime Picture-----------#
-    in_memory_slime_image = slimeimgcreator.drawslime(
-        uid=slime.uid,
+
+    slime_uid_str = str(slime.uid)
+
+    slime_image = slime_image_creator.draw_slime(
+        uid=slime_uid_str,
         version=slime.version,
         name=slime.name,
         color=slime.color,
         template=slime.template,
         accessories=slime.accessories,
-        images=images,
+        no_images=no_images
     )
     # -----------Insert data into Database-----------#
-    # Store Slime and Accessories in DB
 
-    slime_list = [str(slime.uid), slime.version, slime.name, slime.color, slime.template, in_memory_slime_image]
-    slimedb.insert_into_slime_table(slime_list, no_db_images)
+    # Store Slime and Accessories in DB
+    slime_list = [slime_uid_str, slime.version, slime.name, slime.color, slime.template, slime_image]
+    slime_db.insert_into_slime_table(slime_list, db_images)
 
     accessory_list = []
 
     for accessory in slime.accessories:
-        accessory_list = [str(slime.uid), accessory]
-        slimedb.insert_into_accessories_table(accessory_list)
+        accessory_list = [slime_uid_str, accessory]
+        slime_db.insert_into_accessories_table(accessory_list)
 
     if rare:
-        slime_rare_list = slime_list[0:4]
-        rare_list = slimestats.slime_rare_detector(slime_rare_list, slime.accessories)
+        slime_stats.slime_rare_detector(
+            slime_rare_list = slime_list[0:4],
+            accessories = slime.accessories
+            )
 
-    # DB Read Actions
-    # slimedb.read_all_slime()
+    # DB Read Actions -> slimedb.read_all_slime()
+
     slime_time = timeit.default_timer() - slime_start
 
     if verbose:
-        print(f"{index}/{loop_number.stop} Slime Created. ID:{slime_list[0]}, Name: {slime_list[2]} in {slime_time} seconds")
+        print(f"{index}/{loop_number.stop} Slime Created. ID:{slime_uid_str}, Name: {slime_list[2]} in {slime_time} seconds")
 
     return slime_time
 
