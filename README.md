@@ -13,9 +13,9 @@ According to the RNG, accessories will be chosen for the slime (up to two). Ther
 
 | Rarity    | Item |
 | -------- | ------- |
-| Common   | sunglasses, sunhat    |
-| Uncommon | top hat, wizard hat, mustache     |
-| Rare     | robin hood hat, santa hat, crown, golden top hat, golden sunglasses    |
+| Common   | Sunglasses, Sunhat    |
+| Uncommon | Top Hat, Wizard Hat, Mustache     |
+| Rare     | Robin Hood Hat, Santa Hat, Crown, Golden Top Hat, Golden Sunglasses, Mustache+, Helmet    |
 
 ![Example Slime](etc/example_slime.jpg)
 
@@ -34,44 +34,44 @@ According to the RNG, accessories will be chosen for the slime (up to two). Ther
 
 ## Usage
 ```
-usage: slimegenerator.py [-h] -n NUMBER [-g] [-v] [-r] [-i] [-ndi] [-s SLEEP]
+usage: slime_generator.py [-h] -n NUMBER [-g] [-v] [-r] [-ni] [-d] [-s SLEEP]
 
 Slime CLI tool
 
 options:
   -h, --help            show this help message and exit
-  -n [NUMBER], --number NUMBER
-                        Define how many slime you would like to create
-  -g, --graph           Pass this if you would like to view a graph
+  -n NUMBER, --number NUMBER
+                        Specify the number of slimes you want to create
+  -g, --graph           Create graph of slime creation times
   -v, --verbose         Print slime information and creation times
   -r, --rare            Rare Detector: prints information when a rare occurance happens
-  -i, --images          Prints the slime image in the img/ directory
-  -ndi, --no-db-images  Omits the slime image in the sqlite database
-  -s [SECONDS], --sleep SECONDS
+  -ni, --no-images      Do not save slime images to the img/ directory
+  -d, --db-images       Adds the slime image to the sqlite database
+  -s SLEEP, --sleep SLEEP
                         Add static backoff (sleep timer) in seconds to wait after creation of each slime
   ```
 
 ## Examples
 
-1) Create 10 slime, displaying a graph to show their creation times. Slimes get saved to img/ directory
+1) Create 10 slime, displaying a graph to show their creation times. Slimes get saved to img/ directory by default.
 
-    `python3 slimegenerator.py -n 10 -g -i`
+    `python3 slimegenerator.py -n 10 -g`
 
-2) Create 15 slime, being verbose to see them get created
+2) Create 15 slime, being verbose to see them get created.
 
     `python3 slimegenerator.py -n 15 -v`
 
-3) Create 20 slime, printing when there's a rare item,  while showing a graph
+3) Create 20 slime, printing when there's a rare item,  while showing a graph.
 
     `python3 slimegenerator.py -n 20 -r -g`
 
-4) Create 100 slimes with graphs, verbosity, rare detector, images in img/ folder, while omitting slime image in DB
+4) Create 100 slimes with graphs, verbosity, rare detector, adding the slime image in DB.
 
-    `python3 slimegenerator.py -n 100 -g -v -r -i -ndi`
+    `python3 slimegenerator.py -n 100 -g -v -r -d`
 
-5) Create 200 slimes with verbosity, putting images in the img/ folder, with a 1 second wait time
+5) Create 200 slimes with verbosity, omitting images in the img/ folder, with a 1 second wait time.
 
-    `python3 slimegenerator.py -n 200 -v -i -s 1`
+    `python3 slimegenerator.py -n 200 -v -ni -s 1`
 
 ## Design
 
