@@ -10,7 +10,8 @@ from statistics import mean
 import numpy
 import matplotlib.pyplot as plt
 
-def slime_creation_graph(create_time, loop_number, slime_time_list):
+
+def slime_creation_graph(loop_number, slime_time_list):
     """Creates graph about Slime Creation"""
     loop_count = float(loop_number)
     avg = mean(slime_time_list)
@@ -47,7 +48,7 @@ def slime_rare_detector(slime_rare_list, accessories):
         "crown",
         "golden top hat",
         "helmet",
-        "mustache+"
+        "mustache+",
     ]
 
     for accessory in accessories:

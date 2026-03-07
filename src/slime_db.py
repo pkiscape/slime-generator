@@ -9,10 +9,10 @@ Actions for loading/querying with the SlimeDB
 
 SlimeDB
 
-+-------------------+       		  
-|       Slime       |        
++-------------------+
+|       Slime       |
 +-------------------+       	 
-| Slime ID (PK)     |               
+| Slime ID (PK)     |          
 | Version           |             
 | Name              |              
 | Color             | 		  
@@ -83,15 +83,16 @@ def create_tables():
     # Create Slime Table
     cursor.execute(
         """
-	CREATE TABLE Slime (
+    CREATE TABLE Slime (
         SlimeID TEXT PRIMARY KEY,
         Version INTEGER,
         Name TEXT,
         Color TEXT,
         Template INTEGER,
+        SlimeTime REAL,
         SlimeImage BLOB
         )
-		"""
+"""
     )
 
     # Create Accessories Table
@@ -109,6 +110,26 @@ def create_tables():
     slimedb_connection.close()
 
 
+def ensure_slime_time_column():
+    """Adds SlimeTime column for older databases that do not have it."""
+    slimedb_connection = sqlite3.connect("slime.db")
+    cursor = slimedb_connection.cursor()
+
+    table_exists = cursor.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='Slime'"
+    ).fetchone()
+
+    if table_exists:
+        columns = cursor.execute("PRAGMA table_info(Slime)").fetchall()
+        column_names = [column[1] for column in columns]
+
+        if "SlimeTime" not in column_names:
+            cursor.execute("ALTER TABLE Slime ADD COLUMN SlimeTime REAL")
+
+    slimedb_connection.commit()
+    slimedb_connection.close()
+
+
 def insert_into_slime_table(slime_list, db_images):
     """Inserts data into main Slime table"""
 
@@ -117,22 +138,49 @@ def insert_into_slime_table(slime_list, db_images):
 
     # Remove the image from the database if no_db_images is passed
     if db_images is False:
-        del slime_list[5]
         cursor.execute(
             """
-	    INSERT INTO Slime (SlimeID, Version, Name, Color, Template)
-	    VALUES (?, ?, ?, ?, ?)
-		""",
-            slime_list,
+        INSERT INTO Slime (SlimeID, Version, Name, Color, Template, SlimeTime)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+            slime_list[:6],
         )
 
     else:
         cursor.execute(
             """
-	    INSERT INTO Slime (SlimeID, Version, Name, Color, Template, SlimeImage)
-	    VALUES (?, ?, ?, ?, ?, ?)
-		""",
+	    INSERT INTO Slime (SlimeID, Version, Name, Color, Template, SlimeTime, SlimeImage)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
             slime_list,
+        )
+
+    slimedb_connection.commit()
+    slimedb_connection.close()
+
+
+def update_slime_time_and_image(slime_id, slime_time, slime_image, db_images):
+    """Updates final slime time and image once generation completes."""
+    slimedb_connection = sqlite3.connect("slime.db")
+    cursor = slimedb_connection.cursor()
+
+    if db_images:
+        cursor.execute(
+            """
+            UPDATE Slime
+            SET SlimeTime = ?, SlimeImage = ?
+            WHERE SlimeID = ?
+            """,
+            (slime_time, slime_image, slime_id),
+        )
+    else:
+        cursor.execute(
+            """
+            UPDATE Slime
+            SET SlimeTime = ?
+            WHERE SlimeID = ?
+            """,
+            (slime_time, slime_id),
         )
 
     slimedb_connection.commit()

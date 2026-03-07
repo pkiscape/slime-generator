@@ -13,15 +13,18 @@ import random
 import json
 from PIL import Image, ImageDraw, ImageFont
 
-def draw_slime(uid, version, name, color, template, accessories, no_images):
+
+def draw_slime(
+    uid, version, name, color, template, accessories, no_images, slime_time=None
+):
     """
     Creates a slime image based on its attributes
     """
 
     def get_color():
         """Chooses a color code from random"""
-        r, g, b = random.choices(range(256), k=3)
-        hexadecimal = f"#{r:02X}{g:02X}{b:02X}"
+        red, green, blue = random.choices(range(256), k=3)
+        hexadecimal = f"#{red:02X}{green:02X}{blue:02X}"
         return hexadecimal
 
     big_font = ImageFont.truetype("etc/LiberationMono-Regular.ttf", 34)
@@ -77,8 +80,8 @@ def draw_slime(uid, version, name, color, template, accessories, no_images):
             "Items",
             fill=(0, 0, 0),
             font=medium_font,
-            anchor="mm"
-            )
+            anchor="mm",
+        )
 
         for accessory_text in accessory_text_list:
             accessory_position_y = accessory_position_y + 16
@@ -87,14 +90,30 @@ def draw_slime(uid, version, name, color, template, accessories, no_images):
                 accessory_text,
                 fill=(0, 0, 0),
                 font=small_font,
-                anchor="mm"
-                )
+                anchor="mm",
+            )
 
     # Write Attributes to Image
     text_select.text((392, 620), name, fill=(0, 0, 0), font=big_font, anchor="mm")
     text_select.text((392, 648), uid, fill=(0, 0, 0), font=medium_font, anchor="mm")
-    text_select.text((146, 720), "Version: " + str(version), fill=(0, 0, 0), font=medium_font, anchor="mm")
-    text_select.text((600, 720), "Color: " + color, fill=(0, 0, 0), font=medium_font, anchor="mm")
+    text_select.text(
+        (146, 720),
+        "Version: " + str(version),
+        fill=(0, 0, 0),
+        font=medium_font,
+        anchor="mm",
+    )
+    text_select.text(
+        (600, 720), "Color: " + color, fill=(0, 0, 0), font=medium_font, anchor="mm"
+    )
+    if slime_time is not None:
+        text_select.text(
+            (392, 720),
+            f"Create Time: {slime_time:.4f}s",
+            fill=(0, 0, 0),
+            font=small_font,
+            anchor="mm",
+        )
 
     # Save slime to JPG
     if not no_images:
